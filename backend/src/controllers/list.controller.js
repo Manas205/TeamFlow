@@ -1,0 +1,29 @@
+const listService = require('../services/list.service');
+
+const createList = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const { boardId } = req.params;
+    if (!name) {
+      return res.status(400).json({ message: 'List name is required' });
+    }
+    const list = await listService.createList({ name, boardId });
+    return res.status(201).json({ message: 'List created successfully', list });
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
+  }
+};
+
+const getLists = async (req, res) => {
+  try {
+    const { boardId } = req.params;
+    const lists = await listService.getLists(boardId);
+    return res.status(200).json({ lists });
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
+  }
+};
+
+module.exports = { createList, getLists };
