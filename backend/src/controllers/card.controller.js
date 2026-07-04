@@ -25,5 +25,16 @@ const getCards = async (req, res) => {
     return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
   }
 };
-
-module.exports = { createCard, getCards };
+const moveCard=async(req,res)=>{
+  try {
+    const {cardId}=req.params;
+    const {newListId,prevCardId,nextCardId}=req.body;
+    const card=await cardService.moveCard({cardId,newListId,prevCardId,nextCardId});
+    return res.status(200).json({ message: 'Card moved successfully', card });
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    console.log("Error in move card controller");
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' })
+  }
+}
+module.exports = { createCard, getCards,moveCard };

@@ -24,4 +24,26 @@ const getCards=async(listId)=>{
     const cards=await Card.find({list:listId}).sort({position:1});
     return cards;
 }
-module.exports = { createCard, getCards };
+const moveCard=async({cardId,newListId,prevCardId,nextCardId})=>{
+    let newPosition;
+    const prevCard=prevCardId ? await Card.findById(prevCardId) : null;
+    const nextCard=nextCardId ? await Card.findById(nextCardId) : null;
+    if(prevCard && nextCard)
+    {
+        newPosition=(prevCard.position+nextCard.position)/2;
+    }else if(prevCard && !nextCard)
+    {
+        newPosition=prevCard.position+1000
+    }else if(!prevCard && nextCard)
+    {
+        newPosition=nextCard.position/2;
+    }
+    else newPosition=1000;
+    const card=await Card.findByIdAndUpdate(
+        cardId,
+        {list:newListId,position:newPosition},
+        {new:true}
+    )
+    return card;
+}
+module.exports = { createCard, getCards ,moveCard};

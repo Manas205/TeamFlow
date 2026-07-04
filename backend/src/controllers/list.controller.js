@@ -25,5 +25,16 @@ const getLists = async (req, res) => {
     return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
   }
 };
-
-module.exports = { createList, getLists };
+const moveList=async(req,res)=>{
+  try {
+      const {listId}=req.params;
+      const {prevListId,nextListId}=req.body;
+      const list=await listService.moveList({listId,prevListId,nextListId});
+      return res.status(200).json({ message: 'List moved successfully', list });
+    } catch (err) {
+      const statusCode = err.statusCode || 500;
+      console.log("Error in move list controller");
+      return res.status(statusCode).json({ message: err.message || 'Something went wrong' })
+    }
+}
+module.exports = { createList, getLists, moveList };

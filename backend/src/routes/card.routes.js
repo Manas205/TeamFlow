@@ -7,5 +7,4 @@ const checkWorkspaceMember = require('../middlewares/checkWorkspaceMember');
 
 router.post('/', authenticate, checkWorkspaceMember, cardController.createCard);
 router.get('/', authenticate, checkWorkspaceMember, cardController.getCards);
-
 module.exports = router;
