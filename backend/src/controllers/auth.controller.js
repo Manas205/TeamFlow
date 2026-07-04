@@ -70,4 +70,14 @@ const logout=async(req,res)=>{
   res.clearCookie('refreshToken');
   return res.status(200).json({ message: 'Logged out successfully' });
 }
-module.exports={signup,login, refresh,logout}
+const getCurrentUser = async (req, res) => {
+  try {
+    const user = await authService.getCurrentUser(req.userId);
+    return res.status(200).json({ user });
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
+  }
+};
+
+module.exports = { signup, login, refresh, logout, getCurrentUser };

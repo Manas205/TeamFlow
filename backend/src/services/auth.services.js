@@ -86,5 +86,13 @@ const refreshAccessToken=async(refreshToken)=>{
 const logout=async(userid)=>{
     await User.findByIdAndUpdate(userId,{refreshToken:null});
 }
-
-module.exports={signup,login,refreshAccessToken,logout}
+const getCurrentUser = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    const error = new Error('User not found');
+    error.statusCode = 404;
+    throw error;
+  }
+  return { _id: user._id, name: user.name, email: user.email };
+};
+module.exports={signup,login,refreshAccessToken,logout,getCurrentUser}
