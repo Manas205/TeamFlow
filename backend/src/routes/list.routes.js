@@ -8,4 +8,5 @@ router.post('/', authenticate, checkWorkspaceMember, listController.createList);
 router.get('/', authenticate, checkWorkspaceMember, listController.getLists);
 router.patch('/:listId/move', authenticate, checkWorkspaceMember, listController.moveList)
 router.use('/:listId/cards',require('./card.routes'))
+router.get('/full',authenticate,checkWorkspaceMember,listController.getListsWithCards)
 module.exports = router;

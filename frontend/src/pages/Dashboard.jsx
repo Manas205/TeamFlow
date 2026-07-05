@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from '../context/AuthContext';
-
+import {Link} from 'react-router-dom'
 const Dashboard = () => {
   const [workspaces, setWorkspaces] = useState([]);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
@@ -54,8 +54,10 @@ const Dashboard = () => {
 
       <ul>
         {workspaces.map((ws) => (
-          <li key={ws._id}>{ws.name} ({ws.role})</li>
-        ))}
+    <li key={ws._id}>
+      <Link to={`/workspace/${ws._id}`}>{ws.name}</Link> ({ws.role})
+    </li>
+  ))}
       </ul>
     </div>
   );

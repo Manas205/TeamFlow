@@ -37,4 +37,17 @@ const moveList=async(req,res)=>{
       return res.status(statusCode).json({ message: err.message || 'Something went wrong' })
     }
 }
-module.exports = { createList, getLists, moveList };
+const getListsWithCards=async(req,res)=>{
+  try
+  {
+    const {boardId}=req.params;
+    const lists=await listService.getListWithCards(boardId)
+    
+    return res.status(200).json({ lists });
+  }catch(err)
+  {
+    const statusCode = err.statusCode || 500;
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
+  }
+}
+module.exports = { createList, getLists, moveList,getListsWithCards };

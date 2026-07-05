@@ -1,5 +1,5 @@
 const List = require('../models/List');
-
+const Card=require('../models/card')
 const createList = async ({ name, boardId }) => {
   const lastList = await List.findOne({ board: boardId }).sort({ position: -1 });
   const position = lastList ? lastList.position + 1000 : 1000;
@@ -29,4 +29,14 @@ const moveList=async({listId,prevListId,nextListId})=>{
   const list=await List.findByIdAndUpdate(listId,{position:newPosition},{new:true})
   return list
 }
-module.exports = { createList, getLists, moveList };
+const getListWithCards=async(boardId)=>{
+  const lists=await List.find({board:boardId}).sort({position:1}).lean();
+  const listsWithCards=await Promise.all(
+    lists.map(async(list)=>{
+      const cards=await Card.find({list:list._id}).sort({position:1})
+      return {...list,cards};
+    })
+  )
+  return listsWithCards
+}
+module.exports = { createList, getLists, moveList,getListWithCards };

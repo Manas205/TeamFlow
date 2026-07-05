@@ -4,6 +4,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
+import BoardList from './pages/BoardList';
+import BoardDetail from './pages/BoardDetail';
 function App() {
   return (
     <BrowserRouter>
@@ -15,7 +17,12 @@ function App() {
             <Dashboard/>
           </ProtectedRoute>
           } />
+          <Route path="/workspace/:workspaceId" element={<ProtectedRoute><BoardList/></ProtectedRoute>}/>
+          import BoardDetail from './pages/BoardDetail';
+        <Route path="/workspace/:workspaceId/board/:boardId" element={<ProtectedRoute><BoardDetail /></ProtectedRoute>} />
       </Routes>
+      
+
     </BrowserRouter>
   );
 }
