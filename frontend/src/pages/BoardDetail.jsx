@@ -4,7 +4,7 @@ import axiosInstance from '../api/axiosInstance';
 import { DndContext, closestCenter } from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-
+import socket from '../api/socket';
 const BoardDetail=()=>{
   const { workspaceId, boardId } = useParams();
   const [lists, setLists] = useState([]);
@@ -14,6 +14,28 @@ const BoardDetail=()=>{
     useEffect(() => {
     fetchLists();
   }, [boardId]);
+  useEffect(() => {
+  socket.connect();
+  socket.emit('joinBoard', boardId);
+  return () => {
+    socket.emit('leaveBoard', boardId);
+    socket.disconnect();
+  };
+}, [boardId]);
+useEffect(() => {
+  socket.on('cardMoved', () => {
+    fetchLists();
+  });
+
+  socket.on('listMoved', () => {
+    fetchLists();
+  });
+
+  return () => {
+    socket.off('cardMoved');
+    socket.off('listMoved');
+  };
+}, []);
   const fetchLists = async () => {
     try {
       const response = await axiosInstance.get(`/workspaces/${workspaceId}/boards/${boardId}/lists/full`);

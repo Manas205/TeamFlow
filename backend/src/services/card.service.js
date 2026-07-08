@@ -1,5 +1,6 @@
 const Card=require('../models/card')
 const List=require('../models/List')
+const { getIO } = require('../config/socket'); 
 const createCard=async({title,listId})=>{
     const list = await List.findById(listId);
     if (!list) {
@@ -44,6 +45,7 @@ const moveCard=async({cardId,newListId,prevCardId,nextCardId})=>{
         {list:newListId,position:newPosition},
         {new:true}
     )
+    getIO().to(card.board.toString()).emit('cardMoved', card);
     return card;
 }
 module.exports = { createCard, getCards ,moveCard};

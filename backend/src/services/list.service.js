@@ -1,5 +1,7 @@
 const List = require('../models/List');
 const Card=require('../models/card')
+const { getIO } = require('../config/socket');
+
 const createList = async ({ name, boardId }) => {
   const lastList = await List.findOne({ board: boardId }).sort({ position: -1 });
   const position = lastList ? lastList.position + 1000 : 1000;
@@ -27,6 +29,7 @@ const moveList=async({listId,prevListId,nextListId})=>{
     newPosition=nextList.position/2;
   }else newPosition=1000
   const list=await List.findByIdAndUpdate(listId,{position:newPosition},{new:true})
+  getIO().to(list.board.toString()).emit('listMoved', list);
   return list
 }
 const getListWithCards=async(boardId)=>{
