@@ -1,5 +1,5 @@
 const Card=require('../models/card')
-const List=require('../models/List')
+const List=require('../models/list')
 const { getIO } = require('../config/socket'); 
 const createCard=async({title,listId})=>{
     const list = await List.findById(listId);

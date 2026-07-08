@@ -1,4 +1,4 @@
-const List = require('../models/List');
+const List = require('../models/list');
 const Card=require('../models/card')
 const { getIO } = require('../config/socket');
 

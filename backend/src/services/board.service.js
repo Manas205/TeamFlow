@@ -1,4 +1,4 @@
-const Board=require('../models/Board')
+const Board=require('../models/board')
 const createBoard=async({name,workspaceId,userId})=>{
     const board=await Board.create({
         name,

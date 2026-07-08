@@ -1,5 +1,5 @@
 const mongoose=require('mongoose')
-const Workspace=require('../models/Workspace')
+const Workspace=require('../models/workspace')
 const Membership=require('../models/membership')
 const createWorkspace=async({name,userId})=>{
     const session=await mongoose.startSession();
