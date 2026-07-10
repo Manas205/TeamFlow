@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/authContext';
 import {Link} from 'react-router-dom'
 const Dashboard = () => {
   const [workspaces, setWorkspaces] = useState([]);
