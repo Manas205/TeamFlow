@@ -26,12 +26,12 @@ const login=async(req,res)=>{
             return res.status(400).json({message:'Email and password are required'})
         }
         const {accessToken, refreshToken,user}=await authService.login({email,password})
-        res.cookie('refreshToken',refreshToken,{
-            httpOnly:true,
-            secure:process.env.NODE_ENV ==='production',
-            sameSite:'strict',
-            maxAge:7*24*60*60*1000
-        })
+        res.cookie('refreshToken', refreshToken, {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000,
+});
         return res.status(200).json({
       message: 'Login successful',
       accessToken,
