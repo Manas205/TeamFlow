@@ -28,4 +28,22 @@ const getUserWorkspace=async(req,res)=>{
     return res.status(statusCode).json({ message: err.message || 'Something went wrong' })
     }
 }
-module.exports = { createWorkspace, getUserWorkspace };
+const inviteMember = async (req, res) => {
+  try {
+    const { workspaceId } = req.params;
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email is required' });
+    }
+    const membership = await workspaceService.inviteMember({
+      workspaceId,
+      email,
+      requesterId: req.userId,
+    });
+    return res.status(201).json({ message: 'Member added successfully', membership });
+  } catch (err) {
+    const statusCode = err.statusCode || 500;
+    return res.status(statusCode).json({ message: err.message || 'Something went wrong' });
+  }
+};
+module.exports = { createWorkspace, getUserWorkspace,inviteMember };

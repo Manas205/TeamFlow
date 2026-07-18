@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import axiosInstance from '../api/axiosInstance';
 import { useAuth } from '../context/authContext';
 import {Link} from 'react-router-dom'
+
+
 const Dashboard = () => {
   const [workspaces, setWorkspaces] = useState([]);
   const [newWorkspaceName, setNewWorkspaceName] = useState('');
   const [loading, setLoading] = useState(true);
   const { user, logout } = useAuth();
-
+  const [inviteEmail, setInviteEmail] = useState({});
   useEffect(() => {
     fetchWorkspaces();
   }, []);
@@ -33,7 +35,18 @@ const Dashboard = () => {
       console.error('Failed to create workspace:', err);
     }
   };
-
+  const handleInvite = async (e, workspaceId) => {
+  e.preventDefault();
+  const email = inviteEmail[workspaceId];
+  if (!email) return;
+  try {
+    await axiosInstance.post(`/workspaces/${workspaceId}/invite`, { email });
+    setInviteEmail((prev) => ({ ...prev, [workspaceId]: '' }));
+    alert('Member invited successfully'); // simple feedback, given timeline
+  } catch (err) {
+    alert(err.response?.data?.message || 'Failed to invite member');
+  }
+};
   if (loading) return <div>Loading workspaces...</div>;
 
   return (
@@ -59,6 +72,23 @@ const Dashboard = () => {
     </li>
   ))}
       </ul>
+      <ul>
+  {workspaces.map((ws) => (
+    <li key={ws._id}>
+      <Link to={`/workspace/${ws._id}`}>{ws.name}</Link> ({ws.role})
+      {ws.role === 'owner' && (
+        <form onSubmit={(e) => handleInvite(e, ws._id)} style={{ display: 'inline', marginLeft: '12px' }}>
+          <input
+            value={inviteEmail[ws._id] || ''}
+            onChange={(e) => setInviteEmail((prev) => ({ ...prev, [ws._id]: e.target.value }))}
+            placeholder="Invite by email"
+          />
+          <button type="submit">Invite</button>
+        </form>
+      )}
+    </li>
+  ))}
+</ul>
     </div>
   );
 };

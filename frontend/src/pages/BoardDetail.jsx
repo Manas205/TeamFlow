@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axiosInstance from '../api/axiosInstance';
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import { DndContext, closestCenter,useDroppable} from '@dnd-kit/core';
 import { SortableContext, verticalListSortingStrategy, horizontalListSortingStrategy, useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import socket from '../api/socket';
@@ -82,14 +82,24 @@ if (isListDrag) {
       list.cards.some((card)=>card._id===active.id)
     );
     if(sourceListIndex===-1) return;
-    let destListIndex=lists.findIndex((list)=>
-    list.cards.some((card)=>card._id===over.id));
-    if(destListIndex===-1) return;
+    let destListIndex = lists.findIndex((list) =>
+  list.cards.some((card) => card._id === over.id)
+);
+
+let droppedOnEmptyList = false;
+if (destListIndex === -1) {
+  destListIndex = lists.findIndex((list) => list._id === over.id);
+  droppedOnEmptyList = true;
+}
+
+if (destListIndex === -1) return;
 
     const sourceList=lists[sourceListIndex];
     const oldIndex=sourceList.cards.findIndex((card)=>card._id===active.id);
-    const destList=lists[destListIndex];
-    const newIndex=destList.cards.findIndex((card)=>card._id===over.id);
+   const destList = lists[destListIndex];
+const newIndex = droppedOnEmptyList
+  ? destList.cards.length
+  : destList.cards.findIndex((card) => card._id === over.id);
    const updatedLists = [...lists];
   let finalDestCards;
   if (sourceListIndex === destListIndex) {
@@ -218,6 +228,7 @@ const SortableCard = ({ card }) => {
 };
 const SortableList = ({ list, children }) => {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: list._id });
+  const { setNodeRef: setDroppableRef } = useDroppable({ id: list._id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -225,8 +236,22 @@ const SortableList = ({ list, children }) => {
   };
 
   return (
-    <div ref={setNodeRef} style={{ ...style, border: '1px solid #ccc', padding: '8px', minWidth: '200px' }}>
-      <div {...attributes} {...listeners}>
+    <div
+      ref={(node) => {
+        setNodeRef(node);
+        setDroppableRef(node);
+      }}
+      style={{
+        ...style,
+        border: '1px solid #333',
+        borderRadius: '8px',
+        padding: '12px',
+        width: '260px',
+        flexShrink: 0,
+        backgroundColor: '#1a1a1a',
+      }}
+    >
+      <div {...attributes} {...listeners} style={{ cursor: 'grab' }}>
         <h3>{list.name}</h3>
       </div>
       {children}
