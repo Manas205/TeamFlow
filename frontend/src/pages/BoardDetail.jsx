@@ -166,42 +166,42 @@ const newIndex = droppedOnEmptyList
     console.error('Failed to create card:', err);
   }
 };
-  if (loading) return <div>Loading board...</div>;
+  if (loading) return <div className="mx-auto flex min-h-[50vh] items-center justify-center px-4 text-sm text-slate-500">Loading board...</div>;
   return (
-    <div>
+    <div className="space-y-6">
       <Link to={`/workspace/${workspaceId}`}>← Back to Boards</Link>
-      <h1>Board</h1>
+      <h1 className="text-3xl font-semibold tracking-tight text-slate-900">Board</h1>
 
-      <form onSubmit={handleCreateList}>
-        <input
+      <form className="flex w-full gap-2 sm:w-auto" onSubmit={handleCreateList}>
+        <input className="min-h-10 min-w-0 flex-1 rounded-lg border border-slate-300 bg-white px-3 text-sm shadow-sm outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
           value={newListName}
           onChange={(e) => setNewListName(e.target.value)}
           placeholder="New list name"
           required
         />
-        <button type="submit">Add List</button>
+        <button className="min-h-10 rounded-lg bg-indigo-600 px-4 text-sm font-semibold text-white hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-100" type="submit">Add List</button>
       </form>
         <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={lists.map((l) => l._id)} strategy={horizontalListSortingStrategy}>
-  <div style={{ display: 'flex', gap: '16px', marginTop: '16px' }}>
+  <div className="flex min-h-[420px] gap-4 overflow-x-auto pb-4">
     {lists.map((list) => (
       <SortableList key={list._id} list={list}>
         <SortableContext items={list.cards.map((c) => c._id)} strategy={verticalListSortingStrategy}>
-          <ul>
+          <ul className="mb-4 min-h-12 space-y-2">
             {list.cards.map((card) => (
               <SortableCard key={card._id} card={card} />
             ))}
           </ul>
         </SortableContext>
         <form onSubmit={(e) => handleCreateCard(e, list._id)}>
-          <input
+          <input className="min-h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-xs outline-none placeholder:text-slate-400 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-100"
             value={newCardTitles[list._id] || ''}
             onChange={(e) =>
               setNewCardTitles((prev) => ({ ...prev, [list._id]: e.target.value }))
             }
             placeholder="New card title"
           />
-          <button type="submit">Add Card</button>
+          <button className="mt-2 w-full rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-indigo-100" type="submit">Add Card</button>
         </form>
       </SortableList>
     ))}
@@ -221,7 +221,7 @@ const SortableCard = ({ card }) => {
   };
   
   return (
-    <li ref={setNodeRef} style={style} {...attributes} {...listeners}>
+    <li className="cursor-grab rounded-lg border border-slate-200 bg-white p-3 text-sm font-medium text-slate-800 shadow-sm transition hover:border-indigo-200 hover:shadow-md active:cursor-grabbing" ref={setNodeRef} style={style} {...attributes} {...listeners}>
       {card.title}
     </li>
   );
@@ -241,18 +241,12 @@ const SortableList = ({ list, children }) => {
         setNodeRef(node);
         setDroppableRef(node);
       }}
-      style={{
-        ...style,
-        border: '1px solid #333',
-        borderRadius: '8px',
-        padding: '12px',
-        width: '260px',
-        flexShrink: 0,
-        backgroundColor: '#1a1a1a',
-      }}
+      className="w-72 shrink-0 rounded-xl border border-slate-200 bg-slate-50 p-3 shadow-sm"
+      style={style}
     >
-      <div {...attributes} {...listeners} style={{ cursor: 'grab' }}>
-        <h3>{list.name}</h3>
+      <div className="mb-3 flex cursor-grab items-center justify-between border-b border-slate-200 px-1 pb-3" {...attributes} {...listeners}>
+        <h3 className="text-sm font-semibold text-slate-900">{list.name}</h3>
+        <span className="rounded-full bg-white px-2 py-0.5 text-xs font-medium text-slate-500">{list.cards.length}</span>
       </div>
       {children}
     </div>
