@@ -66,13 +66,6 @@ const Dashboard = () => {
       </form>
 
       <ul>
-        {workspaces.map((ws) => (
-    <li key={ws._id}>
-      <Link to={`/workspace/${ws._id}`}>{ws.name}</Link> ({ws.role})
-    </li>
-  ))}
-      </ul>
-      <ul>
   {workspaces.map((ws) => (
     <li key={ws._id}>
       <Link to={`/workspace/${ws._id}`}>{ws.name}</Link> ({ws.role})

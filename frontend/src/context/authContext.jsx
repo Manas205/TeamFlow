@@ -39,15 +39,19 @@ export const AuthProvider = ({ children }) => {
     setAccessToken(accessToken);
   };
 
-  const logout = () => {
-    setUser(null);
-    setAccessToken(null);
+  const logout = async () => {
+    try {
+      await axiosInstance.post('/auth/logout');
+    } catch (err) {
+      console.error('Logout request failed:', err);
+    } finally {
+      setUser(null);
+      setAccessToken(null);
+    }
   };
 
-  if (loading) return <div>Loading...</div>; 
-
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

@@ -20,7 +20,6 @@ function App() {
           </ProtectedRoute>
           } />
           <Route path="/workspace/:workspaceId" element={<ProtectedRoute><BoardList/></ProtectedRoute>}/>
-          import BoardDetail from './pages/BoardDetail';
         <Route path="/workspace/:workspaceId/board/:boardId" element={<ProtectedRoute><BoardDetail /></ProtectedRoute>} />
       </Routes>
       
